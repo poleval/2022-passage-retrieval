@@ -13,10 +13,10 @@ The goal of this task is to develop a system for cross-domain question-answering
 
 The participant will be given:
 
-1. Training set consisting of (question, passage) pairs from trivia domain, i.e. general-knowledge questions typical for popular TV quiz shows, such as [Fifteen to One](https://en.wikipedia.org/wiki/Fifteen_to_One) (PL:[ Jeden z dziesięciu](https://pl.wikipedia.org/wiki/Jeden_z_dziesi%C4%99ciu)).
+1. Training set consisting of (question, passage) pairs from trivia domain, i.e. general-knowledge questions typical for popular TV quiz shows, such as [Fifteen to One](https://en.wikipedia.org/wiki/Fifteen_to_One) (PL: [Jeden z dziesięciu](https://pl.wikipedia.org/wiki/Jeden_z_dziesi%C4%99ciu)).
 2. Three separate test sets with unpaired questions and passages from different domains: trivia, legal, and customer support. Note that for legal and customer support we won’t provide training sets.
 
-For each test question, the system is supposed to retrieve an ordered list of ten most relevant passages (i.e. containing the answer) from the provided corpus. The system will be scored based on its performance on all three test sets.
+For each test question, the system is supposed to retrieve an ordered list of the ten most relevant passages (i.e. containing the answer) from the provided corpus. The system will be scored based on its performance on all three test sets.
 
 The participants are free to use any publicly available datasets to develop their systems with the exception of the test set B from [the PolEval 2021 QA competition](http://2021.poleval.pl/tasks/task4). It is also forbidden to manually label the test examples.
 
@@ -24,7 +24,7 @@ The participants are free to use any publicly available datasets to develop thei
 ## Dataset
 
 ### Training set
-The training set consists of 5000 trivia questions, i.e. general-knowledge questions typical for popular TV quiz shows, such as[ Fifteen to One](https://en.wikipedia.org/wiki/Fifteen_to_One) (PL:[ Jeden z dziesięciu](https://pl.wikipedia.org/wiki/Jeden_z_dziesi%C4%99ciu)). For each question, we manually found up to five passages from Polish Wikipedia that contain the answer to the question. Each passage is accompanied by the title of the article in which it was found. Overall, the training set consists of 16389 question-passage pairs.
+The training set consists of 5000 trivia questions, i.e. general-knowledge questions typical for popular TV quiz shows, such as [Fifteen to One](https://en.wikipedia.org/wiki/Fifteen_to_One) (PL: [Jeden z dziesięciu](https://pl.wikipedia.org/wiki/Jeden_z_dziesi%C4%99ciu)). For each question, we manually found up to five passages from Polish Wikipedia that contain the answer to the question. Each passage is accompanied by the title of the article in which it was found. Overall, the training set consists of 16389 question-passage pairs.
 
 Additionally, we release a Wikipedia corpus of 7097322 passages. The raw Wikipedia dump was parsed using [WikiExtractor](https://github.com/attardi/wikiextractor) and split into passages at the ends of the paragraphs or if the passage was longer than 500 characters.
 
@@ -77,22 +77,25 @@ question-id    passage-id    score
 
 The “pairs.tsv” file contains only positive question-passage pairs, i.e. the passages containing the answer to the question. It doesn’t contain negative pairs, and it is not guaranteed that it contains all possible positive pairs.
 
+
+### Downloading datasets
+All datasets can be found [here](https://huggingface.co/datasets/piotr-rybak/poleval-passage-retrieval/tree/main).
+
+
 ## Evaluation
-The submitted system will be evaluated using Normalized Discounted cumulative Gain for the top 10 most relevant passages (NDCG@10). The value of the NDCG will be calculated for each test set separately and then macro-averaged to obtain the final score.
+The submitted system will be evaluated using Normalized Discounted Cumulative Gain for the top 10 most relevant passages (NDCG@10).
 
 ### Submission format
-The submission should consist of three tab-separated files (one for each test set). Each file should have three columns, “question-id”, “passage-id”, and “score”. The goal of the task is to find the ten most relevant passages for each question and assign them a numerical score representing how relevant the passage is to the question (the higher score the more relevant). There is no restriction on the “score” value. We will use it solely to order the found passages. If you include more than ten passages per question then only ten passages with the highest score will be taken into evaluation.
+The goal of the task is to find an ordered list of the ten most relevant passages for each question. The submission should consist of a single tab-separated file. Each of the ten columns should contain one `passage-id` from `passages.jl` file with the left-most column being the most relevant passage. Each line should contain passages relevant to the matching question from the [`in.tsv`](https://github.com/poleval/2022-passage-retrieval/blob/main/test-A/in.tsv) file.
 
 Example:
 
 ```
-question-id    passage-id    score
-0              13            45.245
-0              92            -0.231
+235415-0  17326-2	2490065-0	69774-0	17332-1 37931-0	1152562-0	3861237-0	2294984-0	407279-0
 ```
 
 ## Baseline
-We provide a simple baseline system based on the BM25 algorithm here: URL
+We provide a simple baseline system based on the BM25 algorithm [here](https://github.com/360er0/poleval-passage-retrieval).
 
 ## References
 1. Nandan Thakur, Nils Reimers, Andreas Rücklé, Abhishek Srivastava, Iryna Gurevych. 2021. [BEIR: A Heterogeneous Benchmark for Zero-shot Evaluation of Information Retrieval Models](https://openreview.net/forum?id=wCu6T5xFjeJ)
